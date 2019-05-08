@@ -44,27 +44,31 @@ app:cardUseCompatPadding="true">
                             android:id="@+id/deleteBtn"
                             android:background="@null"
                             android:src="@drawable/ic_action_delete"
-                            android:layout_width="wrap_content"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:scaleType="fitXY"
                             android:layout_marginEnd="5dp"
                             android:layout_marginRight="5dp"
-                            android:layout_height="wrap_content"/>
+                            />
                     <ImageButton
                         android:id="@+id/editBtn"
                         android:background="@null"
                         android:src="@drawable/ic_action_edit"
-                        android:layout_width="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitXY"
                         android:layout_marginEnd="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_height="wrap_content"/>
+                        android:layout_marginRight="5dp"/>
 
                     <ImageButton
                         android:id="@+id/copyBtn"
                         android:background="@null"
                         android:src="@drawable/ic_action_copy"
-                        android:layout_width="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitXY"
                         android:layout_marginEnd="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_height="wrap_content"/>
+                        android:layout_marginRight="5dp"/>
 
                     <ImageButton
                             android:id="@+id/shareBtn"
@@ -72,8 +76,9 @@ app:cardUseCompatPadding="true">
                             android:layout_marginEnd="5dp"
                             android:layout_marginRight="5dp"
                             android:src="@drawable/ic_action_share"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:scaleType="fitXY"/>
 
         </LinearLayout>
     </LinearLayout>

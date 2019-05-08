@@ -23,7 +23,7 @@ class DbManager {
     //database version
     var dbVersion = 1
 
-    var sqlCreateTable = "CREATE TABLE IF NOTE EXISTS"+dbTable+"("+colID+"INTEGER PRIMARY KEY,"+ colTitle + "TEXT,"+colDes+"TEXT);"
+    val sqlCreateTable = "CREATE TABLE IF NOT EXISTS "+dbTable+" ("+colID+" INTEGER PRIMARY KEY, "+ colTitle + " TEXT, "+colDes+" TEXT);"
 
     var sqlDB:SQLiteDatabase?=null
 
@@ -33,19 +33,22 @@ class DbManager {
     }
 
     inner class DatabaseHeplerNotes:SQLiteOpenHelper{
+
+        var context: Context?=null
+        constructor(context:Context):super(context,dbName,null,dbVersion) {
+            this.context=context
+        }
+
         override fun onCreate(db: SQLiteDatabase?) {
            db!!.execSQL(sqlCreateTable)
             Toast.makeText(this.context,"database created...",Toast.LENGTH_SHORT).show()
         }
 
         override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-            db!!.execSQL("DROP table if Exists"+dbTable)
+            db!!.execSQL("DROP table if Exists "+dbTable)
         }
 
-        var context: Context?=null
-        constructor(context:Context):super(context,dbName,null,dbVersion) {
-            this.context=context
-        }
+
     }
 
     fun insert(values:ContentValues):Long{
