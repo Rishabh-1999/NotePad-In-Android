@@ -2,10 +2,7 @@ package com.example.notepad_using_android
 
 import android.app.AlertDialog
 import android.app.SearchManager
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.SearchView
@@ -24,19 +21,40 @@ class MainActivity : AppCompatActivity() {
     var listNotes = ArrayList<Note>()
 
 
+    //shared preferences
+    var mSharedPref:SharedPreferences?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //load from DB
-        loadQueryAscending("@")
-
+        // Shared Pref for Sorting Data
+        mSharedPref=this.getSharedPreferences("My_data", Context.MODE_PRIVATE)
+        //load sorting technique as selected before, default setting will be newest
+        val mSorting=mSharedPref!!.getString("Sort","newest")
+        when(mSorting)
+        {
+            "newest" -> loadQueryNewest("%")
+            "oldest" -> loadQueryOldest("%")
+            "ascending" -> loadQueryAscending("%")
+            "descending" -> loadQueryDescending("%")
+        }
+        floatingActionButton.setOnClickListener {
+            startActivity(Intent(this,AddNoteActivity::class.java))
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        loadQueryAscending("%")
+        //load sorting technique as selected before, default setting will be newest
+        val mSorting=mSharedPref!!.getString("Sort","newest")
+        when(mSorting)
+        {
+            "newest" -> loadQueryNewest("%")
+            "oldest" -> loadQueryOldest("%")
+            "ascending" -> loadQueryAscending("%")
+            "descending" -> loadQueryDescending("%")
+        }
     }
 
     private fun loadQueryAscending(title: String) {
@@ -59,13 +77,10 @@ class MainActivity : AppCompatActivity() {
                 while(cursor.moveToNext())
         }
 
-
-
         //adapter
         var myNotesAdapter=MyNoteAdapter(this,listNotes)
-    //set adapter
+        //set adapter
         notesLv.adapter=myNotesAdapter
-
 
         //get total no tasks from list
         val total = notesLv.count
@@ -75,10 +90,7 @@ class MainActivity : AppCompatActivity() {
         {
             //set to actionbox as subtitle of sctionbox
             mActionBar.subtitle="You have "+total+" note(s) in list..."
-
-
         }
-
     }
 
     private fun loadQueryDescending(title: String) {
@@ -100,9 +112,6 @@ class MainActivity : AppCompatActivity() {
             }
             while(cursor.moveToPrevious())
         }
-
-
-
         //adapter
         var myNotesAdapter=MyNoteAdapter(this,listNotes)
         //set adapter
@@ -117,8 +126,6 @@ class MainActivity : AppCompatActivity() {
         {
             //set to actionbox as subtitle of sctionbox
             mActionBar.subtitle="You have "+total+" note(s) in list..."
-
-
         }
 
     }
@@ -136,20 +143,15 @@ class MainActivity : AppCompatActivity() {
                 val ID= cursor.getInt(cursor.getColumnIndex("ID"))
                 val Title= cursor.getString(cursor.getColumnIndex("Title"))
                 val Description=cursor.getString(cursor.getColumnIndex("Description"));
-
                 listNotes.add(Note(ID,Title,Description))
             }
             while(cursor.moveToPrevious())
         }
 
-
-
         //adapter
         var myNotesAdapter=MyNoteAdapter(this,listNotes)
         //set adapter
         notesLv.adapter=myNotesAdapter
-
-
         //get total no tasks from list
         val total = notesLv.count
         //actionbar
@@ -158,10 +160,7 @@ class MainActivity : AppCompatActivity() {
         {
             //set to actionbox as subtitle of sctionbox
             mActionBar.subtitle="You have "+total+" note(s) in list..."
-
-
         }
-
     }
 
     private fun loadQueryOldest(title: String) {
@@ -183,14 +182,10 @@ class MainActivity : AppCompatActivity() {
             while(cursor.moveToNext())
         }
 
-
-
         //adapter
         var myNotesAdapter=MyNoteAdapter(this,listNotes)
         //set adapter
         notesLv.adapter=myNotesAdapter
-
-
         //get total no tasks from list
         val total = notesLv.count
         //actionbar
@@ -199,18 +194,13 @@ class MainActivity : AppCompatActivity() {
         {
             //set to actionbox as subtitle of sctionbox
             mActionBar.subtitle="You have "+total+" note(s) in list..."
-
-
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
-
         //searchView
         val sv: SearchView =menu!!.findItem(R.id.app_bar_serach).actionView as SearchView
-
         val sm=getSystemService(Context.SEARCH_SERVICE) as SearchManager
         sv.setSearchableInfo(sm.getSearchableInfo(componentName))
         sv.setOnQueryTextListener(object:SearchView.OnQueryTextListener{
@@ -232,9 +222,6 @@ class MainActivity : AppCompatActivity() {
         {
             when(item.itemId)
             {
-                R.id.addNote->{
-                    startActivity(Intent(this,AddNoteActivity::class.java))
-            }
                 R.id.action_sort->
                 {
                     showSortDialog()
@@ -254,18 +241,38 @@ class MainActivity : AppCompatActivity() {
             dialogInterface, i ->
             if(i==0){
                 //newest first
+                Toast.makeText(this,"Newest",Toast.LENGTH_SHORT).show()
+                val editor=mSharedPref!!.edit()
+                editor.putString("Sort","Newest")//where 'Sort' is key & 'newest' is value
+                editor.apply()
+                loadQueryNewest("%")
             }
             if(i==1)
             {
                 //oldest first
+                Toast.makeText(this,"Oldest",Toast.LENGTH_SHORT).show()
+                val editor=mSharedPref!!.edit()
+                editor.putString("Sort","Oldest")//where 'Sort' is key & 'Oldest' is value
+                editor.apply()
+                loadQueryOldest("%")
             }
             if(i==2)
             {
                 //title ascending
+                Toast.makeText(this,"Title(Ascending)",Toast.LENGTH_SHORT).show()
+                val editor=mSharedPref!!.edit()
+                editor.putString("Sort","ascending")//where 'Sort' is key & 'Ascending' is value
+                editor.apply()
+                loadQueryAscending("%")
             }
             if(i==3)
             {
-                //title decsending
+                //title descending
+                Toast.makeText(this,"Title(Descending)",Toast.LENGTH_SHORT).show()
+                val editor=mSharedPref!!.edit()
+                editor.putString("Sort","descending")//where 'Sort' is key & 'descending' is value
+                editor.apply()
+                loadQueryDescending("%")
             }
             dialogInterface.dismiss()
         }
@@ -313,6 +320,12 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity,"Copied...",Toast.LENGTH_SHORT).show()
 
             }
+
+            //update btn
+            myView.editBtn.setOnClickListener {
+                GoToUpdateFun(myNote)
+            }
+
             //share btn
             myView.shareBtn.setOnClickListener {
                 val title=myView.titleTv.text.toString()
@@ -345,7 +358,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun GoToUpdateFun(myNote: Note) {
-        var Intent = Intent(this,AddNoteActivity::class.java)
+        var intent = Intent(this,AddNoteActivity::class.java)
         intent.putExtra("ID",myNote.nodeID)
         intent.putExtra("name",myNote.nodeName)
         intent.putExtra("des",myNote.nodeDes)

@@ -12,9 +12,4 @@
             android:title="Search"
             app:actionViewClass="android.support.v7.widget.SearchView"/>
 
-    <item
-        android:id="@+id/addNote"
-        android:title="Add Note"
-        android:icon="@drawable/ic_action_add"
-        app:showAsAction="always"/>
 </menu>

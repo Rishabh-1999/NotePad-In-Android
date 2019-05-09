@@ -58,7 +58,7 @@ class AddNoteActivity : AppCompatActivity() {
         }
         else{
                 var selectionAgrs=arrayOf(id.toString())
-            val ID=dbManager.update(values,"ID?",selectionAgrs)
+            val ID=dbManager.update(values,"ID=?",selectionAgrs)
             if(ID>0){
                 Toast.makeText(this, "Note is Updated", Toast.LENGTH_SHORT).show()
                 finish()
