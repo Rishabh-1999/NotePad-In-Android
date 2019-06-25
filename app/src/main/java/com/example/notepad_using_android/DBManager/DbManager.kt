@@ -1,4 +1,4 @@
-package com.example.notepad_using_android
+package com.example.notepad_using_android.DBManager
 
 import android.content.ContentValues
 import android.content.Context
@@ -10,11 +10,15 @@ import android.database.sqlite.SQLiteQueryBuilder
 import android.widget.Toast
 import kotlin.reflect.KTypeProjection
 
+/*
+Made By Rishabh Anand
+*/
+
 class DbManager {
 
     //database Name
     var dbName = "MyNotes"
-    //tale Name
+    //table Name
     var dbTable = "Notes"
     //columns
     var colID = "ID"
@@ -32,7 +36,7 @@ class DbManager {
         sqlDB = db.writableDatabase
     }
 
-    inner class DatabaseHeplerNotes:SQLiteOpenHelper{
+    inner class DatabaseHeplerNotes:SQLiteOpenHelper {
 
         var context: Context?=null
         constructor(context:Context):super(context,dbName,null,dbVersion) {
@@ -47,17 +51,15 @@ class DbManager {
         override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
             db!!.execSQL("DROP table if Exists "+dbTable)
         }
-
-
     }
 
     fun insert(values:ContentValues):Long{
         val ID= sqlDB!!.insert(dbTable, "",values)
-        return ID;
+        return ID
     }
-    fun Query(projection: Array<String>,selection:String,selectionArgs: Array<String>, sorOrder:String): Cursor {
-        val qb = SQLiteQueryBuilder();
-        qb.tables=dbTable;
+    fun query(projection: Array<String>,selection:String,selectionArgs: Array<String>, sorOrder:String): Cursor {
+        val qb = SQLiteQueryBuilder()
+        qb.tables=dbTable
         val cursor=qb.query(sqlDB, projection,selection,selectionArgs, null,null,sorOrder)
         return cursor
     }

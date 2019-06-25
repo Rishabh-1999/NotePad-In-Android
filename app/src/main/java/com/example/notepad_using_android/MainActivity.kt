@@ -12,16 +12,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Toast
+import com.example.notepad_using_android.Class.Note
+import com.example.notepad_using_android.DBManager.DbManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.row.*
 import kotlinx.android.synthetic.main.row.view.*
 
 class MainActivity : AppCompatActivity() {
 
     var listNotes = ArrayList<Note>()
 
-
-    //shared preferences
+    //shared preference
     var mSharedPref:SharedPreferences?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         // Shared Pref for Sorting Data
         mSharedPref=this.getSharedPreferences("My_data", Context.MODE_PRIVATE)
+
         //load sorting technique as selected before, default setting will be newest
         val mSorting=mSharedPref!!.getString("Sort","newest")
         when(mSorting)
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity() {
             "ascending" -> loadQueryAscending("%")
             "descending" -> loadQueryDescending("%")
         }
+
+        //Set function for floating button
         floatingActionButton.setOnClickListener {
             startActivity(Intent(this,AddNoteActivity::class.java))
         }
@@ -62,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         val projections = arrayOf("ID","Title","Description")
         val selectionAgrs = arrayOf(title)
         //sort by title
-        val cursor=dbManager.Query(projections, "Title like ?",selectionAgrs,"Title")
+        val cursor=dbManager.query(projections, "Title like ?",selectionAgrs,"Title")
         listNotes.clear()
         //ascending
         if(cursor.moveToFirst())
@@ -72,9 +75,9 @@ class MainActivity : AppCompatActivity() {
                 val Title= cursor.getString(cursor.getColumnIndex("Title"))
                 val Description=cursor.getString(cursor.getColumnIndex("Description"));
 
-                listNotes.add(Note(ID,Title,Description))
+                listNotes.add(Note(ID, Title, Description))
             }
-                while(cursor.moveToNext())
+            while(cursor.moveToNext())
         }
 
         //adapter
@@ -98,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         val projections = arrayOf("ID","Title","Description")
         val selectionAgrs = arrayOf(title)
         //sort by title
-        val cursor=dbManager.Query(projections, "Title like ?",selectionAgrs,"Title")
+        val cursor=dbManager.query(projections, "Title like ?",selectionAgrs,"Title")
         listNotes.clear()
         //Descending
         if(cursor.moveToLast())
@@ -108,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                 val Title= cursor.getString(cursor.getColumnIndex("Title"))
                 val Description=cursor.getString(cursor.getColumnIndex("Description"));
 
-                listNotes.add(Note(ID,Title,Description))
+                listNotes.add(Note(ID, Title, Description))
             }
             while(cursor.moveToPrevious())
         }
@@ -116,7 +119,6 @@ class MainActivity : AppCompatActivity() {
         var myNotesAdapter=MyNoteAdapter(this,listNotes)
         //set adapter
         notesLv.adapter=myNotesAdapter
-
 
         //get total no tasks from list
         val total = notesLv.count
@@ -127,7 +129,6 @@ class MainActivity : AppCompatActivity() {
             //set to actionbox as subtitle of sctionbox
             mActionBar.subtitle="You have "+total+" note(s) in list..."
         }
-
     }
 
     private fun loadQueryNewest(title: String) {
@@ -135,7 +136,7 @@ class MainActivity : AppCompatActivity() {
         val projections = arrayOf("ID","Title","Description")
         val selectionAgrs = arrayOf(title)
         //sort by ID
-        val cursor=dbManager.Query(projections, "ID like ?",selectionAgrs,"Title")
+        val cursor=dbManager.query(projections, "ID like ?",selectionAgrs,"Title")
         listNotes.clear()
         if(cursor.moveToLast())
         {
@@ -143,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                 val ID= cursor.getInt(cursor.getColumnIndex("ID"))
                 val Title= cursor.getString(cursor.getColumnIndex("Title"))
                 val Description=cursor.getString(cursor.getColumnIndex("Description"));
-                listNotes.add(Note(ID,Title,Description))
+                listNotes.add(Note(ID, Title, Description))
             }
             while(cursor.moveToPrevious())
         }
@@ -168,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         val projections = arrayOf("ID","Title","Description")
         val selectionAgrs = arrayOf(title)
         //sort by ID
-        val cursor=dbManager.Query(projections, "ID like ?",selectionAgrs,"Title")
+        val cursor=dbManager.query(projections, "ID like ?",selectionAgrs,"Title")
         listNotes.clear()
         if(cursor.moveToFirst())
         {
@@ -177,7 +178,7 @@ class MainActivity : AppCompatActivity() {
                 val Title= cursor.getString(cursor.getColumnIndex("Title"))
                 val Description=cursor.getString(cursor.getColumnIndex("Description"));
 
-                listNotes.add(Note(ID,Title,Description))
+                listNotes.add(Note(ID, Title, Description))
             }
             while(cursor.moveToNext())
         }
@@ -213,7 +214,7 @@ class MainActivity : AppCompatActivity() {
                 loadQueryAscending("%" + newText + "%" )
                 return false
             }
-        });
+        })
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -232,13 +233,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showSortDialog() {
-       //list of sorting options
+        //list of sorting options
         val sortOption= arrayOf("Newest","Oldest","Title(Ascending)","Title(Descending)")
         val mBuilder = AlertDialog.Builder(this)
         mBuilder.setTitle("Sort by")
         mBuilder.setIcon(R.drawable.ic_action_sort)
         mBuilder.setSingleChoiceItems(sortOption,-1){
-            dialogInterface, i ->
+                dialogInterface, i ->
             if(i==0){
                 //newest first
                 Toast.makeText(this,"Newest",Toast.LENGTH_SHORT).show()
@@ -344,11 +345,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getItem(position: Int): Any {
-           return listNoteAdapter[position]
+            return listNoteAdapter[position]
         }
 
         override fun getItemId(position: Int): Long {
-           return position.toLong()
+            return position.toLong()
         }
 
         override fun getCount(): Int {

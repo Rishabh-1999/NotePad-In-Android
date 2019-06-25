@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.example.notepad_using_android.DBManager.DbManager
 import kotlinx.android.synthetic.main.activity_add_note.*
 import java.lang.Exception
 
@@ -38,7 +39,7 @@ class AddNoteActivity : AppCompatActivity() {
 
     fun addFunc(view:View)
     {
-        var dbManager=DbManager(this)
+        var dbManager= DbManager(this)
 
         var values=ContentValues()
         values.put("Title",titleEt.text.toString())
@@ -58,7 +59,7 @@ class AddNoteActivity : AppCompatActivity() {
         }
         else{
                 var selectionAgrs=arrayOf(id.toString())
-            val ID=dbManager.update(values,"ID=?",selectionAgrs)
+            val ID=dbManager.update(values,"ID?",selectionAgrs)
             if(ID>0){
                 Toast.makeText(this, "Note is Updated", Toast.LENGTH_SHORT).show()
                 finish()
