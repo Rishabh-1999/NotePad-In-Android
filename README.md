@@ -1,13 +1,11 @@
-### NotePad-Android
-<hr>
-
-This app displays lists of Notes
+# NotePad-Android
+This Android App displays lists of Notes. This is written in Kotlin.
 
 Pre-requisites
 --------------
-
 - Android SDK v28
 - Min. Android SDK 16
+- SQL 
 
 Features
 ---------------
